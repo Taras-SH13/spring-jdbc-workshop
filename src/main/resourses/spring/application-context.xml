@@ -8,6 +8,6 @@
     <context:component-scan base-package="org.shop"/>
     <context:property-placeholder location="classpath:my-properties.properties"/>
 
-    <bean class="org.shop.db.OrderRepositoryImpl"/>
+    <!--<bean class="org.shop.db.OrderRepositoryImpl"/>-->
     <bean class="org.shop.service.OrderServiceImpl"/>
 </beans>

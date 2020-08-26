@@ -4,34 +4,39 @@ import com.mysql.fabric.jdbc.FabricMySQLDriver;
 import org.shop.db.entity.OrderDetailEntity;
 import org.shop.db.entity.OrderEntity;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+@Repository
 public class OrderRepositoryImpl implements OrdersRepository {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/shopdb?useSSL=false";
-    private static final String USER = "root";
-    private static final String PASSWORD = "root";
-    OrderDetailRepositoryImpl orderDetailRepository;
+//    private static final String URL = "jdbc:mysql://localhost:3306/shopdb?useSSL=false";
+//    private static final String USER = "root";
+//    private static final String PASSWORD = "root";
 
-    public OrderRepositoryImpl(OrderDetailRepositoryImpl orderDetailRepository) {
+
+    OrderDetailRepositoryImpl orderDetailRepository;
+    Connection connection;
+
+    public OrderRepositoryImpl(OrderDetailRepositoryImpl orderDetailRepository,Connection connection) {
         this.orderDetailRepository = orderDetailRepository;
+        this.connection=connection;
     }
 
     @Override
     public List<OrderEntity> findAllOrdersInDB() {
      List<OrderEntity> orders = new ArrayList<>();
         String selectquery = "SELECT *FROM `order`";
-        try {
-            Driver driver = new FabricMySQLDriver();
-            DriverManager.registerDriver(driver);
-        } catch (SQLException e) {
-            System.out.println("Не удалось загрузить драйвер!!!");
-
-        }
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD); Statement statement = connection.createStatement()) {
+//        try {
+//            Driver driver = new FabricMySQLDriver();
+//            DriverManager.registerDriver(driver);
+//        } catch (SQLException e) {
+//            System.out.println("Не удалось загрузить драйвер!!!");
+//
+//        }
+        try (Statement statement = connection.createStatement()) {
 
             ResultSet result = statement.executeQuery(selectquery);
             while (result.next()) {
@@ -53,14 +58,14 @@ public class OrderRepositoryImpl implements OrdersRepository {
     public OrderEntity findOrderByID(long id) {
         OrderEntity order = null;
         String selectquery = "SELECT *FROM `order`WHERE id=" + id;
-        try {
-            Driver driver = new FabricMySQLDriver();
-            DriverManager.registerDriver(driver);
-        } catch (SQLException e) {
-            System.out.println("Не удалось загрузить драйвер!!!");
-
-        }
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD); Statement statement = connection.createStatement()) {
+//        try {
+//            Driver driver = new FabricMySQLDriver();
+//            DriverManager.registerDriver(driver);
+//        } catch (SQLException e) {
+//            System.out.println("Не удалось загрузить драйвер!!!");
+//
+//        }
+        try (Statement statement = connection.createStatement()) {
 
             ResultSet result = statement.executeQuery(selectquery);
             while (result.next()) {
@@ -82,14 +87,14 @@ public class OrderRepositoryImpl implements OrdersRepository {
         String client = orderEntity.getClient();
         String savequery = "INSERT INTO shopdb.`order`(id,name, client) VALUES " + "(" + id + "," + "'" + name + "'" + "," + "'" + client + "'" + ")";
 
-        try {
-            Driver driver = new FabricMySQLDriver();
-            DriverManager.registerDriver(driver);
-        } catch (SQLException e) {
-            System.out.println("Не удалось загрузить драйвер!!!");
-
-        }
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD); Statement statement = connection.createStatement()) {
+//        try {
+//            Driver driver = new FabricMySQLDriver();
+//            DriverManager.registerDriver(driver);
+//        } catch (SQLException e) {
+//            System.out.println("Не удалось загрузить драйвер!!!");
+//
+//        }
+        try (Statement statement = connection.createStatement()) {
 
             statement.execute(savequery);
             orderDetailRepository.saveOrderDetailInDB(orderEntity);
@@ -101,16 +106,16 @@ public class OrderRepositoryImpl implements OrdersRepository {
     @Override
     public void deleteOrderFromDB(long orderId) {
         orderDetailRepository.deleteOllDetailFromDB(orderId);
-        try {
-            Driver driver = new FabricMySQLDriver();
-            DriverManager.registerDriver(driver);
-        } catch (SQLException e) {
-            System.out.println("Не удалось загрузить драйвер!!!");
-
-        }
+//        try {
+//            Driver driver = new FabricMySQLDriver();
+//            DriverManager.registerDriver(driver);
+//        } catch (SQLException e) {
+//            System.out.println("Не удалось загрузить драйвер!!!");
+//
+//        }
 
         String deletequery = "DELETE FROM shopdb.`order`WHERE id=" + orderId;
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD); Statement statement = connection.createStatement()) {
+        try (Statement statement = connection.createStatement()) {
 
             statement.executeUpdate(deletequery);
 
